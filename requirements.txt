@@ -1,0 +1,34 @@
+# SLMwGUI - Python packages
+# Python 3.8, 64-bit (Windows). Versions are pinned to the ones the program was tested with in the lab.
+#
+# NOT included here, install separately (see README):
+#   - PySpin (spinnaker-python 3.0.0.118, cp38) together with the FLIR Spinnaker SDK
+#   - a VISA backend (NI-VISA or Thorlabs VISA) for PyVISA
+#   - git (needed by pip for the slmpy line below)
+
+# --- numerics ---
+numpy==1.24.3            # keep < 2.0, PySpin 3.0 is built against numpy 1.x
+scipy==1.9.1             # keep < 1.14, the minimizer imports scipy.interpolate.interp2d (removed in 1.14)
+numba==0.58.1
+llvmlite==0.41.0
+scikit-image==0.20.0
+tqdm==4.66.5
+
+# --- GPU minimizer (optional at runtime: without an NVIDIA GPU the GUI falls back to the CPU minimizer) ---
+cupy-cuda12x==12.3.0     # needs an NVIDIA driver supporting CUDA 12
+
+# --- GUI / plotting / images ---
+PyQt5==5.15.10
+PyQt5-sip==12.13.0
+matplotlib==3.7.2
+pillow==10.4.0
+opencv-python==4.10.0.84
+
+# --- instruments ---
+PyVISA==1.14.1           # LED diode controller (Thorlabs ITC4020)
+thorlabs-elliptec==1.1.0 # ELL6B filter mount
+pyserial==3.5
+
+# --- SLM (second-screen display) ---
+wxPython==4.1.1
+slmpy @ git+https://github.com/wavefrontshaping/slmPy.git@7173e148fb7adcc013e35ed3941652e0894dbe56

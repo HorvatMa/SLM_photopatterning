@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Editors
+.vscode/
+.idea/
+.spyproject/
+
+# Measurement data - lives on the data disk / NAS (see paths.py), never in the repo
+*.dat
+*.npz
+*.npy
+SLM_scan_files/
+SLM_patterns/
+SLM_optimized_structures/
+data/

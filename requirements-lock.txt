@@ -1,0 +1,42 @@
+# Fully pinned lock file - every package incl. dependencies, exact versions.
+# Generated from requirements.txt (edit that one, then regenerate this).
+# Python 3.8, 64-bit Windows. Install with:  pip install -r requirements-lock.txt
+# PySpin (spinnaker-python) is still installed separately, see README.
+colorama==0.4.6
+contourpy==1.0.5
+cupy-cuda12x==12.3.0
+cycler==0.11.0
+fastrlock==0.8.3
+fonttools==4.51.0
+imageio==2.33.1
+importlib_metadata==7.0.1
+importlib_resources==6.4.0
+kiwisolver==1.4.4
+lazy_loader==0.4
+llvmlite==0.41.0
+matplotlib==3.7.2
+networkx==3.1
+numba==0.58.1
+numpy==1.24.3
+opencv-python==4.10.0.84
+packaging==24.1
+pillow==10.4.0
+pyparsing==3.0.9
+PyQt5==5.15.10
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.13.0
+pyserial==3.5
+python-dateutil==2.9.0.post0
+PyVISA==1.14.1
+PyWavelets==1.4.1
+scikit-image==0.20.0
+scipy==1.9.1
+six==1.16.0
+slmpy @ git+https://github.com/wavefrontshaping/slmPy.git@7173e148fb7adcc013e35ed3941652e0894dbe56
+thorlabs-elliptec==1.1.0
+tifffile==2023.4.12
+tqdm==4.66.5
+typing_extensions==4.11.0
+tzdata==2026.5
+wxPython==4.1.1
+zipp==3.20.2

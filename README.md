@@ -71,11 +71,26 @@ py -3.8 -m venv .venv
 :: conda activate slm
 
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r requirements-lock.txt
 pip install path\to\spinnaker_python-3.0.0.118-cp38-cp38-win_amd64.whl
 ```
 
-`requirements.txt` lists all packages with pinned versions and the reason for the important pins.
+There are two requirement files:
+
+| File | What it is | Use it to |
+|---|---|---|
+| `requirements.txt` | the packages the code uses directly, pinned, with the reason for the important pins | read and edit by hand |
+| `requirements-lock.txt` | **every** package including dependencies, at the exact versions tested in the lab | install, so every machine gets an identical environment |
+
+If you change `requirements.txt` (add or upgrade a package), regenerate the lock file in a fresh environment:
+
+```bat
+pip install -r requirements.txt
+pip freeze --exclude-editable > requirements-lock.txt
+```
+
+Then check that the `slmpy` line in the lock file is still the `git+https://...@<commit>` form, and
+remove `spinnaker-python` if it was installed in that environment.
 
 ### 3. Data folder
 

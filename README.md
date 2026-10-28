@@ -113,11 +113,34 @@ python GUI_SLM_v2.py           :: main GUI
 python calibration_run.py      :: calibration scan (interactive, in a terminal)
 python create_vzorec_360.py    :: generate a wanted pattern (edit the bottom of the file first)
 python see_scan_file.py        :: inspect a calibration scan (set the file name at the top)
+python test_slm_display.py     :: check that the SLM image is displayed right (new PC)
 ```
 
 At startup the GUI opens the SLM window on the second screen and connects to the ITC4020; both must
 be connected. The Elliptec mount connects only when you press **Connect**. The console prints which minimizer is used:
 `Minimizer: GPU (cupy)` or `Minimizer: CPU`.
+
+### Checking a new PC (`test_slm_display.py`)
+
+The SLM reads its 10-bit value from the exact RGB numbers of every pixel, so the PC must send them **unchanged**.
+Run this once on every new PC (or after a graphics driver update):
+
+```bat
+python test_slm_display.py                               :: parts 1 + 2, needs only the SLM connected
+python test_slm_display.py --camera 9_6_2025_info.npz    :: + part 3, needs camera, laser on, same optics as the calibration
+```
+
+1. **Display setup.** The SLM must be monitor 1 (Extend, not Duplicate), 1920 × 1200, 32-bit, Windows scaling 100%, and the gamma table must be untouched.
+2. **Pixel check.** It shows a pattern with all 1024 values plus a 1-pixel checkerboard, takes a screenshot of the SLM monitor, and compares it
+   with what was sent, pixel by pixel. If they differ, it says whether the image is mirrored, scaled, or has its colors changed.
+3. **Optical check (optional).** It shows uniform values, measures the polarization angle with the camera, and compares it with a
+   calibration file. Select the same ROI as for the calibration. Only this part sees what happens *after* the graphics card.
+
+A screenshot can't see the graphics driver's **"Limited" RGB range (16–235)**. Intel and AMD drivers often use it over HDMI by
+default, and it changes almost every SLM value. Set the SLM display to **Full range (0–255)** in the Intel/AMD/NVIDIA control
+panel, and turn off color enhancement, night light and HDR for it. The script exits with code 1 if anything fails.
+
+The SLM works with any graphics card (Intel/AMD/NVIDIA); NVIDIA is only needed for the GPU minimizer.
 
 ---
 
@@ -184,6 +207,7 @@ paths.py              data folder locations + find_calibration_dat
 RectangleFinder_v2.py Tk tool to draw the ROI rectangle on a camera image
 create_vzorec_360.py  pattern generator (script)
 see_scan_file.py      calibration scan viewer / analysis (script)
+test_slm_display.py   checks that the SLM image arrives unchanged on this PC (run on every new PC)
 ```
 
 ### SLM pixel encoding (`SLMcalibration.convert_to_RGB`)

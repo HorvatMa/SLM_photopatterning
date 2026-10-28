@@ -236,6 +236,8 @@ Errors are passed back with `error_signal` and shown in a message box. Everythin
   `GUI_minimize.py` (minimizer).
 - **Version pins** (see `requirements.txt`): Python 3.12 because the newest PySpin wheels (4.x) exist only for 3.10 and 3.12, and 3.10
   reaches end of life in October 2026. PySpin 4.4 needs `numpy>=2.0`, and numba 0.61 supports numpy up to 2.2, so numpy is 2.2.
+  Keep numpy **below 2.3** also because of `slmpy`: it sends every image with `ndarray.tostring()`, which numpy 2.3 removed
+  (it would fail with an `AttributeError` the first time an image is shown).
   wxPython is 4.2 because 4.1 has no 3.12 wheels. `slmpy` is pinned to a commit of the upstream repo, unmodified.
 - **Python 3.8 → 3.12 migration.** The minimizer (both modes) and the SLM RGB encoding were compared on a synthetic calibration
   between the old 3.8 environment and the new one, and the results are identical. The unused `scipy.interpolate.interp2d`

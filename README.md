@@ -38,19 +38,19 @@ The camera is only needed for the calibration scan; the GUI itself does not use 
 
 ## Installation
 
-Tested on **Windows 10, Python 3.8 (64-bit)**.
+Tested on **Windows 10/11, Python 3.12 (64-bit)**.
 
 ### 1. System software (once per PC)
 
-1. **Python 3.8, 64-bit**: from python.org or conda (`conda create -n slm python=3.8`).
-2. **git**: pip needs it to install `slmpy` from GitHub.
+1. **[uv](https://docs.astral.sh/uv/)** (`winget install astral-sh.uv`): installs Python 3.12 and the packages.
+2. **git**: uv needs it to install `slmpy` from GitHub.
 3. **FLIR Spinnaker SDK + PySpin.** This is handled separately and isn't in `requirements.txt`,
    because it isn't on PyPI.
-   - Install the Spinnaker SDK (this program was tested with **3.0.0.118**) from the
+   - Install the Spinnaker SDK (this program was tested with **4.4.0.246**) from the
      [Teledyne FLIR website](https://www.teledynevisionsolutions.com/products/spinnaker-sdk/) (free account needed).
-   - Download the matching Python wheel for Python 3.8, `spinnaker_python-3.0.0.118-cp38-cp38-win_amd64.whl`,
-     and install it into the environment *after* step 2 below:
-     `pip install spinnaker_python-3.0.0.118-cp38-cp38-win_amd64.whl`
+     The camera is USB, so if the installer fails on the **GigE Vision** interface, run it again with the GigE drivers turned off.
+   - Download the matching Python wheel for Python 3.12 (`spinnaker_python-4.4.0.246-cp312-cp312-win_amd64.whl`, inside a zip)
+     and install it into the environment *after* step 2 below. FLIR only offers PySpin 4.x wheels for Python 3.10 and 3.12.
    - Only needed for the calibration scan. Without PySpin the GUI still runs, and only `init_camera` raises an error.
 4. **A VISA backend** for PyVISA: NI-VISA or Thorlabs VISA (the ITC4020 driver package from Thorlabs).
 5. **Elliptec**: the ELL6B shows up as a COM port (FTDI virtual COM port driver; Windows usually installs it automatically).
@@ -62,17 +62,12 @@ Tested on **Windows 10, Python 3.8 (64-bit)**.
 git clone <this repo url> SLMwGUI
 cd SLMwGUI
 
-:: with venv (needs a Python 3.8 interpreter)
-py -3.8 -m venv .venv
+uv python install 3.12
+uv venv --python 3.12 .venv
 .venv\Scripts\activate
 
-:: or with conda
-:: conda create -n slm python=3.8
-:: conda activate slm
-
-python -m pip install --upgrade pip
-pip install -r requirements-lock.txt
-pip install path\to\spinnaker_python-3.0.0.118-cp38-cp38-win_amd64.whl
+uv pip install -r requirements-lock.txt
+uv pip install path\to\spinnaker_python-4.4.0.246-cp312-cp312-win_amd64.whl
 ```
 
 There are two requirement files:
@@ -85,8 +80,8 @@ There are two requirement files:
 If you change `requirements.txt` (add or upgrade a package), regenerate the lock file in a fresh environment:
 
 ```bat
-pip install -r requirements.txt
-pip freeze --exclude-editable > requirements-lock.txt
+uv pip install -r requirements.txt
+uv pip freeze --exclude-editable > requirements-lock.txt
 ```
 
 Then check that the `slmpy` line in the lock file is still the `git+https://...@<commit>` form, and
@@ -239,8 +234,12 @@ Errors are passed back with `error_signal` and shown in a message box. Everythin
   its `camera_features` settings and its image/Stokes functions. Now it uses plain FLIR `PySpin`, and the few image functions it
   needed are in `polarimetry.py`, giving identical results. `GUI_SLM_v2.py` merges the earlier `GUI_SLM_v1.py` (SLM, LED, Elliptec) and
   `GUI_minimize.py` (minimizer).
-- **Version pins** (see `requirements.txt`): `numpy<2` because of PySpin 3.0, and `scipy<1.14` because the minimizer imports `interp2d`.
-  `slmpy` is pinned to a commit of the upstream repo, unmodified.
+- **Version pins** (see `requirements.txt`): Python 3.12 because the newest PySpin wheels (4.x) exist only for 3.10 and 3.12, and 3.10
+  reaches end of life in October 2026. PySpin 4.4 needs `numpy>=2.0`, and numba 0.61 supports numpy up to 2.2, so numpy is 2.2.
+  wxPython is 4.2 because 4.1 has no 3.12 wheels. `slmpy` is pinned to a commit of the upstream repo, unmodified.
+- **Python 3.8 → 3.12 migration.** The minimizer (both modes) and the SLM RGB encoding were compared on a synthetic calibration
+  between the old 3.8 environment and the new one, and the results are identical. The unused `scipy.interpolate.interp2d`
+  import (removed in scipy 1.14) was dropped.
 - **The ITC4020 is found by its serial number `M00248415`** (`VISA_connection.LaserController.init`). For another unit,
   pass `findstr=` or `address=`.
 - **LED current limits:** the GUI caps the current at `MAX_CURRENT = 1500 mA`, and the controller is set to a 1.55 A limit and 5.5 V

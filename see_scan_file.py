@@ -20,7 +20,7 @@ from skimage.transform import resize       #To resize the images to your desired
 from scipy.optimize import curve_fit 
 from tqdm import tqdm
 import numba as nb
-from scipy.interpolate import interp2d,  RectBivariateSpline
+from scipy.interpolate import RectBivariateSpline
 from scipy.interpolate import RBFInterpolator, splrep,splev
 import pickle
 from paths import find_calibration_dat, CALIBRATION_FOLDER
